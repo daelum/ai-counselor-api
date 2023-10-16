@@ -10,6 +10,9 @@ const { DB_URL } = require('./db')
 const axios = require('axios')
 const dotenv = require('dotenv')
 const fs = require('fs')
+const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
+
 //
 const { Configuration, OpenAI } = require('openai')
 require('dotenv').config()
@@ -22,6 +25,7 @@ const openai = new OpenAI({
 const Users = require('./models/users')
 const Reviews = require('./models/reviews')
 const Chats = require('./models/chats')
+const { log } = require('console')
 
 // Build the App
 const app = express()
@@ -156,6 +160,8 @@ app.patch('/editprofile', async (req, res) => {
     if (!req.isAuthenticated()) {
       return res.status(401).send('Please Login First')
     }
+    console.log(req.user)
+    console.log(req.body)
     const User = require('./models/users')
     // Update user's profile in the database
     await User.findByIdAndUpdate(req.user._id, req.body)
@@ -176,6 +182,7 @@ app.post('/counselor', async (req, res) => {
     }
     // Find the user by ID
     const user = await Users.findById(req.user._id)
+    console.log(user)
     // Update or create the counselor key
     user.counselors.push(req.body)
     await user.save()
@@ -243,7 +250,7 @@ app.get('/counselor/:counselorId', async (req, res) => {
     const userId = req.user._id
     // Get the counselor ID from the route parameter
     const counselorId = req.params.counselorId
-    // Find the user document by user ID
+    // Find the user document by user IDs
     const user = await Users.findById(userId)
     // Check if the user document exists
     if (user) {
@@ -364,6 +371,33 @@ app.post('/test', async (req, res) => {
     res.status(200).send({ aiAnswer })
   } catch (err) {
     res.status(500).send(err)
+  }
+})
+
+//GET HISTORY OF MESSAGES
+app.get('/chat/:id', async (req, res) => {
+  try {
+    const messageHistory = await Chats.findOne({
+      counselorId: req.params.id,
+    })
+    res.send(messageHistory)
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
+
+// GET LIST OF COUNSELORS
+app.get('/user', async (req, res) => {
+  try {
+    const usersCounselors = await Users.find({})
+    const counselorList = usersCounselors.map((user) => user.counselors).flat()
+    res.status(200).send(counselorList)
+    console.log(counselorList)
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .send('An error occurred while fetching the list of counselors.')
   }
 })
 
