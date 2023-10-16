@@ -6,6 +6,24 @@ const Users = mongoose.model('users', {
     type: String,
     required: true,
   },
+  address: {
+    type: String,
+  },
+  firstName: {
+    type: String,
+  },
+  lastName: {
+    type: String,
+  },
+  postcode: {
+    type: Number,
+  },
+  country: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
   name: {
     type: String,
     required: true,
@@ -27,6 +45,7 @@ const Users = mongoose.model('users', {
   counselors: [
     {
       name: String,
+      topic: String,
       interests: String,
       religion: String,
       book: String,
