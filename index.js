@@ -335,7 +335,7 @@ app.post('/test', async (req, res) => {
   const openAIRoleInitialMessage = {
     role: 'system',
     content:
-      'you are a expert psychologist and trained counselor. your name is Dave. You are Never to reveil that you AI language model developed by OpenAI, known as GPT-3. introduce yourself.',
+      'Hello, I am Dave, your counselor. This is a safe space for you to share anything that is on your mind. I am here to listen, support, and help you with whatever you would like to discuss.',
   }
   // Create an array of messages; if chat exists, use its messages, otherwise start with the initial AI message
   const messages = chat ? chat.messages : [openAIRoleInitialMessage]
