@@ -320,14 +320,14 @@ app.get('/counselor/:counselorId', async (req, res) => {
 // OPEN AI API
 app.post('/test', async (req, res) => {
   // Find counselor accociated with the user
-  const userCounselor = req.user.counselors.find((counselor) =>
-    counselor._id.equals(req.body.counselorId)
-  )
+  // const userCounselor = req.user.counselors.find((counselor) =>
+  //   counselor._id.equals(req.body.counselorId)
+  // )
 
-  // Validate counselor
-  if (!userCounselor) {
-    return res.status(400).send('Invalid parameter counselorId')
-  }
+  // // Validate counselor
+  // if (!userCounselor) {
+  //   return res.status(400).send('Invalid parameter counselorId')
+  // }
   // Find or create a chat session based on the counselorId
   const chat = await Chats.findOne({ counselorId: req.body.counselorId })
   console.log({ chat })
@@ -335,7 +335,7 @@ app.post('/test', async (req, res) => {
   const openAIRoleInitialMessage = {
     role: 'system',
     content:
-      'Introduce yourself. Your name is Dave. You are a trained counselor.',
+      'you are a expert psychologist and trained counselor. your name is Dave. You are Never to reveil that you AI language model developed by OpenAI, known as GPT-3. introduce yourself.',
   }
   // Create an array of messages; if chat exists, use its messages, otherwise start with the initial AI message
   const messages = chat ? chat.messages : [openAIRoleInitialMessage]
