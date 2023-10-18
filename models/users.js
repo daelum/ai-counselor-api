@@ -52,6 +52,9 @@ const Users = mongoose.model('users', {
       goals: String,
     },
   ],
+  review: {
+    type: String,
+  },
 })
 
 module.exports = Users
