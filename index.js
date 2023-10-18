@@ -132,7 +132,7 @@ app.post('/signup', async (req, res) => {
   }
 })
 
-// PROFILE
+// PROFILE - used for fetching users & counselors
 app.get('/profile', async (req, res) => {
   console.log(req.query)
   console.log('Hello from the PROFILE')
@@ -148,6 +148,36 @@ app.get('/profile', async (req, res) => {
     res.status(200).json({ user, counselors: userCounselors })
   } catch (err) {
     console.error(err)
+    res.status(500).send(err)
+  }
+})
+
+// FIND USER
+app.get('/profile', async (req, res) => {
+  console.log(req.query)
+  console.log('Hello from the PROFILE')
+  try {
+    // if (!req.isAuthenticated()) {
+    //   return res.status(401).send('Please Login First')
+    // }
+    // Find the user by ID
+    const user = await Users.findById(req.user._id)
+    // Respond with the user data
+    res.status(200).json({ user })
+  } catch (err) {
+    console.error(err)
+    res.status(500).send(err)
+  }
+})
+
+// CREATE/UPDATE REVIEW
+app.post('/', async (req, res) => {
+  console.log(req.query)
+  console.log(re.body)
+  console.log('hello from REVIEWS')
+  try {
+    const user = await Reviews.create(req.body)
+  } catch (err) {
     res.status(500).send(err)
   }
 })
