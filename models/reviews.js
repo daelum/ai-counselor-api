@@ -5,14 +5,12 @@ const Reviews = mongoose.model('reviews', {
   author: {
     type: ObjectId,
     ref: 'users',
-    required: true,
   },
   date: {
     type: Date,
     default: Date.now,
-    required: true,
   },
-  description: {
+  content: {
     type: String,
     required: true,
   },
