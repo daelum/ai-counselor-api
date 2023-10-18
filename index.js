@@ -170,13 +170,35 @@ app.get('/profile', async (req, res) => {
   }
 })
 
+// REVIEW MAP ROUTE
+app.get('/reviews', async (req, res) => {
+  try {
+    const users = await Users.find({}).select('name review').lean()
+    // console.log(users[0].name)
+    // console.log(users.review)
+    res.status(200).send(users)
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
+
 // CREATE/UPDATE REVIEW
-app.post('/', async (req, res) => {
-  console.log(req.query)
-  console.log(re.body)
+app.post('/reviews', async (req, res) => {
+  console.log(req.body)
   console.log('hello from REVIEWS')
   try {
-    const user = await Reviews.create(req.body)
+    const reviews = await Reviews.create(req.body)
+    // Update or create the Review key
+    console.log(reviews)
+    console.log(reviews.content)
+    // Users.reviews.push(reviews.content)
+    const hi = await Users.findByIdAndUpdate(
+      req.user._id,
+      { $set: { review: 'hello' } },
+      { new: true }
+    )
+    console.log(hi)
+    await reviews.save()
   } catch (err) {
     res.status(500).send(err)
   }
