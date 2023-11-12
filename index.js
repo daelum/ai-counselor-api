@@ -246,6 +246,30 @@ app.post('/counselor', async (req, res) => {
   }
 })
 
+// DELETE COUNSELOR
+app.delete('/profile/:counselorId', async (req, res) => {
+  try {
+    const counselorId = req.params.counselorId
+    // Delete the chat associated with the counselorId from the Chats collection
+    const deletedChat = await Chats.findOneAndDelete({ counselorId })
+    console.log('Deleted from Chats:', deletedChat)
+    // Delete the counselor from the user's counselors array in the Users collection
+    const user = await Users.findById(req.user._id)
+    if (user) {
+      // Filter out the counselor with a matching _id
+      user.counselors = user.counselors.filter(
+        (counselor) => counselor._id.toString() !== counselorId
+      )
+      await user.save()
+      console.log('Deleted from user:', user)
+    }
+    res.status(200).send('Counselor deleted successfully')
+  } catch (err) {
+    console.error('Error:', err)
+    res.status(500).send(err)
+  }
+})
+
 // COUNSELOR
 app.post('/counselor/:counselorId', async (req, res) => {
   try {
